@@ -148,14 +148,7 @@ Embed examples (will show as broken until files exist):
 
 ### Video / Animation
 
-<video src="images/demo.mp4" controls width="640" muted loop></video>
-
-<p align="center">
-  <video src="images/video.mp4" width="500px"></video>
-</p>
-
-<video src="images/video.mp4" width="320" height="240" controls></video>
-
+https://github.com/user-attachments/assets/c048d184-54c0-41d4-8ef5-857a4307ae34
 
 
 ### Capturing Tips
