@@ -1,4 +1,4 @@
-# SoccerGame (HTML5 Canvas Single-File Prototype)
+# GPT5 + COPILOT: SoccerGame (HTML5 Canvas Single-File Prototype)
 
 A self‑contained 11v11 top‑down soccer prototype implemented entirely in a single `index.html` using vanilla JavaScript and the HTML5 Canvas. Includes simple AI, human mouse controls (pass & shoot), player attributes, stamina drain, formations, and debugging overlays.
 
@@ -15,6 +15,8 @@ A self‑contained 11v11 top‑down soccer prototype implemented entirely in a s
 - Ball physics with delta‑time integration, friction, wall bounces, kick cooldown
 - Visual HUD: clock, score, formation, AI pass slider, pass intent lines, velocity vector
 - Debug panel (top‑right) with live mouse, ball, owner & timing info
+
+3hrs coding total 
 
 ## Quick Start
 
