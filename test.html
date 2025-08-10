@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soccer Pass Test</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: monospace; }
+        canvas { border: 2px solid #333; cursor: crosshair; }
+        .info { margin: 10px 0; }
+        .controls { margin: 10px 0; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Soccer Pass Test</h1>
+    <div class="controls">
+        <button onclick="giveBall()">Give Ball to Player</button>
+        <button onclick="testKeyboardPass()">Test Keyboard Pass</button>
+        <button onclick="testKeyboardShot()">Test Keyboard Shot</button>
+    </div>
+    <div class="info">
+        <div>Left-click on field to pass | Right-click and hold to shoot</div>
+        <div id="status">Status: Ready</div>
+    </div>
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <div id="log" style="margin-top: 10px; font-size: 12px; max-height: 200px; overflow-y: auto;"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const log = document.getElementById('log');
+        const status = document.getElementById('status');
+        
+        function addLog(msg) {
+            console.log(msg);
+            const div = document.createElement('div');
+            div.textContent = new Date().toLocaleTimeString() + ': ' + msg;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        // Simple game objects
+        const ball = {
+            x: 100,
+            y: 200,
+            vx: 0,
+            vy: 0,
+            owner: null
+        };
+        
+        const player = {
+            x: 100,
+            y: 200,
+            team: 0,
+            hasBall: true
+        };
+        
+        ball.owner = player;
+        
+        // Mouse state
+        let leftDown = false;
+        let rightDown = false;
+        let rightDownTime = 0;
+        
+        function clientToField(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const inside = (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height);
+            addLog(`Mouse: client(${e.clientX}, ${e.clientY}) -> canvas(${x.toFixed(1)}, ${y.toFixed(1)}) inside=${inside}`);
+            return {x, y, inside};
+        }
+        
+        function kickPassTowardPoint(passer, tx, ty) {
+            addLog(`Pass: from (${passer.x}, ${passer.y}) to (${tx}, ${ty})`);
+            const prev = ball.owner;
+            if (prev) prev.hasBall = false;
+            ball.owner = null;
+            
+            const dx = tx - ball.x;
+            const dy = ty - ball.y;
+            const d = Math.hypot(dx, dy) || 1;
+            const power = 5;
+            ball.vx = (dx / d) * power;
+            ball.vy = (dy / d) * power;
+            addLog(`Ball velocity set: (${ball.vx.toFixed(2)}, ${ball.vy.toFixed(2)})`);
+        }
+        
+        function shootToGoal(passer) {
+            addLog(`Shot: from (${passer.x}, ${passer.y})`);
+            const prev = ball.owner;
+            if (prev) prev.hasBall = false;
+            ball.owner = null;
+            
+            ball.vx = 8;
+            ball.vy = (Math.random() - 0.5) * 4;
+            addLog(`Shot velocity: (${ball.vx.toFixed(2)}, ${ball.vy.toFixed(2)})`);
+        }
+        
+        // Mouse events
+        canvas.addEventListener('mousedown', (e) => {
+            addLog(`Mouse down: button ${e.button}`);
+            if (e.button === 0) {
+                leftDown = true;
+            } else if (e.button === 2) {
+                rightDown = true;
+                rightDownTime = performance.now();
+            }
+        });
+        
+        canvas.addEventListener('mouseup', (e) => {
+            const p = clientToField(e);
+            addLog(`Mouse up: button ${e.button} at (${p.x.toFixed(1)}, ${p.y.toFixed(1)})`);
+            
+            if (e.button === 0 && leftDown) {
+                leftDown = false;
+                if (p.inside && ball.owner && ball.owner === player) {
+                    addLog(`Attempting pass to (${p.x}, ${p.y})`);
+                    kickPassTowardPoint(player, p.x, p.y);
+                } else {
+                    addLog(`Pass failed - inside: ${p.inside}, has ball: ${!!ball.owner}, correct player: ${ball.owner === player}`);
+                }
+            } else if (e.button === 2 && rightDown) {
+                rightDown = false;
+                if (ball.owner && ball.owner === player) {
+                    addLog(`Attempting shot`);
+                    shootToGoal(player);
+                } else {
+                    addLog(`Shot failed - has ball: ${!!ball.owner}, correct player: ${ball.owner === player}`);
+                }
+            }
+        });
+        
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+        
+        // Helper functions
+        function giveBall() {
+            ball.owner = player;
+            player.hasBall = true;
+            ball.x = player.x;
+            ball.y = player.y;
+            ball.vx = 0;
+            ball.vy = 0;
+            addLog('Ball given to player');
+            status.textContent = 'Player has ball - try clicking to pass!';
+        }
+        
+        function testKeyboardPass() {
+            if (ball.owner === player) {
+                addLog('Testing keyboard pass');
+                kickPassTowardPoint(player, player.x + 100, player.y);
+            } else {
+                addLog('No ball to pass - click Give Ball first');
+            }
+        }
+        
+        function testKeyboardShot() {
+            if (ball.owner === player) {
+                addLog('Testing keyboard shot');
+                shootToGoal(player);
+            } else {
+                addLog('No ball to shoot - click Give Ball first');
+            }
+        }
+        
+        // Update ball physics
+        function update() {
+            if (!ball.owner) {
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+                ball.vx *= 0.98;
+                ball.vy *= 0.98;
+                
+                // Bounce off walls
+                if (ball.x < 0 || ball.x > canvas.width) ball.vx *= -0.5;
+                if (ball.y < 0 || ball.y > canvas.height) ball.vy *= -0.5;
+                ball.x = Math.max(0, Math.min(canvas.width, ball.x));
+                ball.y = Math.max(0, Math.min(canvas.height, ball.y));
+            } else {
+                ball.x = player.x;
+                ball.y = player.y;
+            }
+        }
+        
+        // Draw everything
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw field
+            ctx.fillStyle = '#4a8';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw player
+            ctx.fillStyle = '#44f';
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw ball
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw velocity vector
+            if (ball.vx !== 0 || ball.vy !== 0) {
+                ctx.strokeStyle = '#f44';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(ball.x, ball.y);
+                ctx.lineTo(ball.x + ball.vx * 10, ball.y + ball.vy * 10);
+                ctx.stroke();
+            }
+        }
+        
+        // Game loop
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+        
+        // Start
+        addLog('Test started - click Give Ball button first');
+        loop();
+    </script>
+</body>
+</html>
