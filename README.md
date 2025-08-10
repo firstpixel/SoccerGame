@@ -130,41 +130,26 @@ Feel free to iterate on mechanics; the structure favors quick experimentation ov
 
 ## Media (Screenshots & Video)
 
-Add a `media/` folder alongside `index.html` and place assets using the suggested filenames below. Replace the placeholders once you capture real gameplay.
+Assets expected in an `images/` folder (already in repo or create it): `images/image1.png`, `images/image2.png`, `images/image3.png`, and gameplay clip `images/demo.mp4` (optionally also `images/demo.gif`).
 
 ### Images
 
-| Purpose | Suggested File | Markdown |
-| ------- | --------------- | -------- |
-| Main gameplay overview | `media/screenshot-gameplay.png` | `![Gameplay](media/screenshot-gameplay.png)` |
-| Pass debug overlay | `media/screenshot-pass-debug.png` | `![Pass Debug](media/screenshot-pass-debug.png)` |
-| Shot power charging | `media/screenshot-shot-charge.png` | `![Shot Charge](media/screenshot-shot-charge.png)` |
+| Purpose | File | Markdown |
+| ------- | ---- | -------- |
+| Main gameplay overview | `images/image1.png` | `![Gameplay](images/image1.png)` |
+| Pass / debug overlay | `images/image2.png` | `![Pass Debug](images/image2.png)` |
+| Shot power / goal | `images/image3.png` | `![Shot](images/image3.png)` |
 
 Embed examples (will show as broken until files exist):
 
-![Gameplay](media/screenshot-gameplay.png)
-![Pass Debug](media/screenshot-pass-debug.png)
-![Shot Charge](media/screenshot-shot-charge.png)
+![Gameplay](images/image1.png)
+![Pass Debug](images/image2.png)
+![Shot](images/image3.png)
 
 ### Video / Animation
 
-Prefer a short looping GIF ( < 10 MB ) for quick preview plus a higher‑quality MP4/WebM.
+<video src="images/demo.mp4" controls width="640" muted loop></video>
 
-1. Record with a tool like macOS QuickTime or OBS (~10–15s)
-2. Trim and export MP4 (e.g., `media/demo.mp4`)
-3. Convert a smaller GIF (e.g., `media/demo.gif`)
-
-Markdown / HTML embeds:
-
-```markdown
-![Demo GIF](media/demo.gif)
-
-<video src="media/demo.mp4" controls width="640" muted loop></video>
-```
-
-Add an external link if you upload to a platform (YouTube, Loom):
-
-> Full video: <https://youtu.be/your_video_id>
 
 ### Capturing Tips
 
