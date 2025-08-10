@@ -127,3 +127,52 @@ Prototype—add your preferred license here (e.g., MIT).
 ---
 
 Feel free to iterate on mechanics; the structure favors quick experimentation over architecture complexity.
+
+## Media (Screenshots & Video)
+
+Add a `media/` folder alongside `index.html` and place assets using the suggested filenames below. Replace the placeholders once you capture real gameplay.
+
+### Images
+
+| Purpose | Suggested File | Markdown |
+| ------- | --------------- | -------- |
+| Main gameplay overview | `media/screenshot-gameplay.png` | `![Gameplay](media/screenshot-gameplay.png)` |
+| Pass debug overlay | `media/screenshot-pass-debug.png` | `![Pass Debug](media/screenshot-pass-debug.png)` |
+| Shot power charging | `media/screenshot-shot-charge.png` | `![Shot Charge](media/screenshot-shot-charge.png)` |
+
+Embed examples (will show as broken until files exist):
+
+![Gameplay](media/screenshot-gameplay.png)
+![Pass Debug](media/screenshot-pass-debug.png)
+![Shot Charge](media/screenshot-shot-charge.png)
+
+### Video / Animation
+
+Prefer a short looping GIF ( < 10 MB ) for quick preview plus a higher‑quality MP4/WebM.
+
+1. Record with a tool like macOS QuickTime or OBS (~10–15s)
+2. Trim and export MP4 (e.g., `media/demo.mp4`)
+3. Convert a smaller GIF (e.g., `media/demo.gif`)
+
+Markdown / HTML embeds:
+
+```markdown
+![Demo GIF](media/demo.gif)
+
+<video src="media/demo.mp4" controls width="640" muted loop></video>
+```
+
+Add an external link if you upload to a platform (YouTube, Loom):
+
+> Full video: <https://youtu.be/your_video_id>
+
+### Capturing Tips
+
+- Hide the debug panel for clean shots (comment out or temporarily hide element)
+- Use browser zoom so the pitch fills more of the frame (but keep aspect intact)
+- Capture a sequence: (1) kickoff, (2) pass, (3) shot, (4) goal message
+- Keep cursor visible for instructional GIFs
+
+---
+
+Once images are added, this section will auto‑render them on GitHub; no further README edits needed unless you change filenames.
